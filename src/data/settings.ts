@@ -1,7 +1,8 @@
 namespace Settings {
-    interface StageMapCountEntry {
+    interface StageGeneralEntry {
         stage: string;
-        count: number;
+        maps: number;
+        bestOf: number;
     }
 
     interface ModStarRating {
@@ -19,20 +20,21 @@ namespace Settings {
         percentage: number;
     }
 
-    export function getStageMapCountEntries(): StageMapCountEntry[] {
+    export function getStageGeneralEntries(): StageGeneralEntry[] {
         const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
         if (!sheet) {
             return [];
         }
 
         return sheet
-            .getRange('B3:C12')
+            .getRange('B3:D12')
             .getValues()
             .filter(RowUtil.isFull)
             .map(row => {
-                const ret: StageMapCountEntry = {
+                const ret: StageGeneralEntry = {
                     stage: StringUtil.convert(row[0]),
-                    count: parseInt(row[1]),
+                    maps: parseInt(row[1]),
+                    bestOf: parseInt(row[2]),
                 };
 
                 return ret;
@@ -46,14 +48,14 @@ namespace Settings {
         }
 
         const mods = sheet
-            .getRange('F3:O3')
+            .getRange('G3:P3')
             .getValues()
             .reduce((prev, cur) => prev.concat(cur), [])
             .map(StringUtil.convert)
             .filter(e => !StringUtil.isEmptyString(e));
 
         return sheet
-            .getRange('E4:O13')
+            .getRange('F4:P13')
             .getValues()
             .filter(row => !RowUtil.isEmpty(row))
             .map(row => {
@@ -83,7 +85,7 @@ namespace Settings {
         }
 
         return sheet
-            .getRange('Q3:R17')
+            .getRange('R3:S17')
             .getValues()
             .filter(RowUtil.isFull)
             .map(row => {

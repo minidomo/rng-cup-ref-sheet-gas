@@ -1,9 +1,13 @@
 namespace RowUtil {
     export function isEmpty(row: any[]) {
-        return row.every(e => typeof e === 'string' && e === '');
+        return row.every(StringUtil.isEmptyString);
     }
 
     export function hasEmpty(row: any[]) {
-        return row.some(e => typeof e === 'string' && e === '');
+        return row.some(StringUtil.isEmptyString);
+    }
+
+    export function isFull(row: any[]) {
+        return row.every(e => !StringUtil.isEmptyString(e));
     }
 }

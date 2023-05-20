@@ -6,4 +6,8 @@ namespace StringUtil {
 
         return `${value}`;
     }
+
+    export function isEmptyString(value: any) {
+        return typeof value === 'string' && value === '';
+    }
 }

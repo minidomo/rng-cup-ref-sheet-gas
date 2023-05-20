@@ -7,11 +7,11 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
     const lobbyInfo = LobbyStatusHelper.toLobbyInformation(lobbyInfoRange);
     const mapResults = mapRange.map(LobbyStatusHelper.toMapResult);
 
-    if (lobbyInfo.matchId === '') {
+    if (StringUtil.isEmptyString(lobbyInfo.matchId)) {
         return 'ERROR: Missing match id';
     }
 
-    if (lobbyInfo.stage === '') {
+    if (StringUtil.isEmptyString(lobbyInfo.stage)) {
         return 'ERROR: Missing stage';
     }
 
@@ -23,7 +23,7 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
         return LobbyStatusHelper.summaryMessage(redTeam, blueTeam, lobbyInfo, mapResults);
     }
 
-    if (lobbyInfo.mpLink === '') {
+    if (StringUtil.isEmptyString(lobbyInfo.mpLink)) {
         return 'Setup a room and enter the MP-link';
     }
 

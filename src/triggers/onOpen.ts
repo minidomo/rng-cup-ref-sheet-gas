@@ -7,6 +7,7 @@ function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen) {
                 .addItem('Add API key', 'OsuApiKeyManager.showKeyStoringPrompt')
                 .addItem('Remove API key', 'OsuApiKeyManager.removeKeyStoringPrompt'),
         )
+        .addSubMenu(UI.createMenu('Match').addItem('Create', 'MatchManager.create'))
         .addItem('Set HTTP delay', 'HttpDelayManager.showPrompt')
         .addItem('Debug', 'Debug.test')
         .addToUi();

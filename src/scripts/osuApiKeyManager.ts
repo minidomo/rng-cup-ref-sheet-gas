@@ -1,6 +1,4 @@
 namespace OsuApiKeyManager {
-    const { PROPERTIES, UI } = Constants;
-
     function isValidApiKey(key: string) {
         try {
             const url = `https://osu.ppy.sh/api/get_user?k=${key}&type=id&u=2`;
@@ -13,6 +11,8 @@ namespace OsuApiKeyManager {
     }
 
     function apiKeyFlow() {
+        const PROPERTIES = PropertiesService.getScriptProperties();
+        const UI = SpreadsheetApp.getUi();
         const result = UI.prompt(
             'Please enter your osu! API key',
             "Create one using https://osu.ppy.sh/p/api if you don't have it",
@@ -33,6 +33,8 @@ namespace OsuApiKeyManager {
 
     // Original code provided by LeoFLT, modified by minidomo
     export function showKeyStoringPrompt() {
+        const PROPERTIES = PropertiesService.getScriptProperties();
+        const UI = SpreadsheetApp.getUi();
         // check to see if an API key already exists
         if (PROPERTIES.getProperty('apikey')) {
             const response = UI.alert('An API key already exists, do you want to overwrite it?', UI.ButtonSet.YES_NO);
@@ -45,6 +47,8 @@ namespace OsuApiKeyManager {
     }
 
     export function removeKeyStoringPrompt() {
+        const PROPERTIES = PropertiesService.getScriptProperties();
+        const UI = SpreadsheetApp.getUi();
         const response = UI.alert('Are you sure you want to remove the stored API key?', UI.ButtonSet.YES_NO);
         if (response === UI.Button.YES) {
             PROPERTIES.deleteProperty('apikey');

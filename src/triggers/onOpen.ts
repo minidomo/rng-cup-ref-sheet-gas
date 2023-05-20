@@ -1,5 +1,5 @@
 function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen) {
-    const { UI } = Constants;
+    const UI = SpreadsheetApp.getUi();
     UI.createMenu('Referee')
         .addItem('Authorize scripts', 'Authorization.authorize')
         .addSubMenu(

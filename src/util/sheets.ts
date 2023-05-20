@@ -1,7 +1,6 @@
 namespace SheetsUtil {
-    const { SS } = Constants;
-
     export function getAllSheetNames() {
+        const SS = SpreadsheetApp.getActiveSpreadsheet();
         return SS.getSheets().map(e => e.getSheetName());
     }
 }

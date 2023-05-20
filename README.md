@@ -1,4 +1,4 @@
-# RNG Cup Qualifier Scripts
+# RNG Cup Referee Scripts
 
 ## About
 

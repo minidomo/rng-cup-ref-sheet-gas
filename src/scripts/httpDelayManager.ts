@@ -1,7 +1,7 @@
 namespace HttpDelayManager {
-    const { PROPERTIES, UI } = Constants;
-
     export function showPrompt() {
+        const PROPERTIES = PropertiesService.getScriptProperties();
+        const UI = SpreadsheetApp.getUi();
         const result = UI.prompt('Enter the delay (ms) before making an HTTP request', UI.ButtonSet.OK_CANCEL);
 
         if (result.getSelectedButton() === UI.Button.OK) {
@@ -17,6 +17,7 @@ namespace HttpDelayManager {
     }
 
     export function getHttpDelay() {
+        const PROPERTIES = PropertiesService.getScriptProperties();
         const val = PROPERTIES.getProperty('httpDelay');
 
         if (val) {

@@ -1,7 +1,6 @@
 namespace Debug {
-    const { UI } = Constants;
-
     export function test() {
+        const UI = SpreadsheetApp.getUi();
         UI.alert('test');
     }
 }

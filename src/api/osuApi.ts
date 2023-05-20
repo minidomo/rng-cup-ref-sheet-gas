@@ -1,7 +1,6 @@
 // https://github.com/ppy/osu-api/wiki
 
 namespace OsuApi {
-    const { PROPERTIES } = Constants;
     const API_URL = 'https://osu.ppy.sh/api';
 
     function createUrl(baseUrl: string, params: Record<string, any>) {
@@ -13,6 +12,7 @@ namespace OsuApi {
     }
 
     function requestContent(endpoint: string, params: Record<string, any>) {
+        const PROPERTIES = PropertiesService.getScriptProperties();
         const apiKey = PROPERTIES.getProperty('apikey');
         const url = createUrl(`${API_URL}${endpoint}`, {
             k: apiKey,

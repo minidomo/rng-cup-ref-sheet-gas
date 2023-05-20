@@ -10,4 +10,16 @@ namespace StringUtil {
     export function isEmptyString(value: any) {
         return typeof value === 'string' && value === '';
     }
+
+    export function capitalizeStart(str: string) {
+        if (str.length === 0) {
+            return str;
+        }
+
+        if (str.length === 1) {
+            return str.toUpperCase();
+        }
+
+        return str[0].toUpperCase() + str.slice(1);
+    }
 }

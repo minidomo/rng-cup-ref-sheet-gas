@@ -5,7 +5,7 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
     const redTeam = LobbyStatusHelper.toTeam(redRange, 'red');
     const blueTeam = LobbyStatusHelper.toTeam(blueRange, 'blue');
     const lobbyInfo = LobbyStatusHelper.toLobbyInformation(lobbyInfoRange);
-    const mapResults = mapRange.map(LobbyStatusHelper.toMapResult);
+    const mapResults = mapRange.filter(row => !RowUtil.isEmpty(row)).map(LobbyStatusHelper.toMapResult);
 
     if (StringUtil.isEmptyString(lobbyInfo.matchId)) {
         return 'ERROR: Missing match id';
@@ -31,7 +31,7 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
         return LobbyStatusHelper.summaryMessage(redTeam, blueTeam, lobbyInfo, mapResults);
     }
 
-    return LobbyStatusHelper.scoreMessage(redTeam, blueTeam);
+    return LobbyStatusHelper.scoreMessage(redTeam, blueTeam, lobbyInfo);
 }
 
 namespace LobbyStatusHelper {
@@ -50,9 +50,11 @@ namespace LobbyStatusHelper {
     }
 
     type TeamColor = 'red' | 'blue';
+    type WinCondition = 'score' | 'accuracy' | 'combo';
 
     interface MapResult {
         name: string;
+        winCondition: WinCondition;
         winner?: TeamColor;
     }
 
@@ -92,14 +94,30 @@ namespace LobbyStatusHelper {
     export function toMapResult(row: string[]) {
         const ret: MapResult = {
             name: StringUtil.convert(row[1]),
+            winCondition: parseWinCondition(StringUtil.convert(row[4])),
         };
 
-        const color = row[0].toLowerCase();
+        const color = StringUtil.convert(row[0]).toLowerCase();
         if (color === 'red' || color === 'blue') {
             ret.winner = color;
         }
 
         return ret;
+    }
+
+    function parseWinCondition(command: string): WinCondition {
+        const regex = /!mp set \d (\d)/;
+        const match = command.match(regex) as RegExpMatchArray;
+        const scoremode = match[1];
+
+        switch (scoremode) {
+            case '1':
+                return 'accuracy';
+            case '2':
+                return 'combo';
+            default:
+                return 'score';
+        }
     }
 
     export function summaryMessage(
@@ -119,7 +137,7 @@ namespace LobbyStatusHelper {
         message += `:red_square: ${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} :blue_square:\r\r`;
         message += mapResults
             .filter(res => res.winner)
-            .map(res => `:${res.winner}_square: | ${res.name}`)
+            .map(res => `:${res.winner}_square: | ${res.name} \`[${StringUtil.capitalizeStart(res.winCondition)}]\``)
             .join('\r');
         message = message.trim();
         return message;
@@ -130,8 +148,8 @@ namespace LobbyStatusHelper {
         return redScore === winningTarget || blueScore === winningTarget;
     }
 
-    export function scoreMessage(redTeam: Team, blueTeam: Team) {
-        return `${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name}`;
+    export function scoreMessage(redTeam: Team, blueTeam: Team, lobbyInfo: LobbyInformation) {
+        return `${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} // Best of ${lobbyInfo.bestOf}`;
     }
 
     export function isDefaultWin(redScore: number, blueScore: number) {

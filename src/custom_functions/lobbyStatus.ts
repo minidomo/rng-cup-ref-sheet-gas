@@ -11,19 +11,23 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
         return 'ERROR: Missing match id';
     }
 
-    if (lobbyInfo.mpLink === '') {
-        return 'Setup a room and enter the MP-link';
+    if (lobbyInfo.stage === '') {
+        return 'ERROR: Missing stage';
     }
 
     if (lobbyInfo.bestOf === -1) {
         return 'ERROR: Invalid best of number';
     }
 
-    if (lobbyInfo.stage === '') {
-        return 'ERROR: Missing stage';
+    if (LobbyStatusHelper.isDefaultWin(redTeam.score, blueTeam.score)) {
+        return LobbyStatusHelper.summaryMessage(redTeam, blueTeam, lobbyInfo, mapResults);
     }
 
-    if (LobbyStatusHelper.isFinished(redTeam.score, blueTeam.score, lobbyInfo.bestOf)) {
+    if (lobbyInfo.mpLink === '') {
+        return 'Setup a room and enter the MP-link';
+    }
+
+    if (LobbyStatusHelper.wonExpectedMatches(redTeam.score, blueTeam.score, lobbyInfo.bestOf)) {
         return LobbyStatusHelper.summaryMessage(redTeam, blueTeam, lobbyInfo, mapResults);
     }
 
@@ -104,7 +108,14 @@ namespace LobbyStatusHelper {
         lobbyInfo: LobbyInformation,
         mapResults: MapResult[],
     ) {
-        let message = `**${lobbyInfo.stage}: Match ${lobbyInfo.matchId}**\r<${lobbyInfo.mpLink}>\r\r`;
+        let message = `**${lobbyInfo.stage}: Match ${lobbyInfo.matchId}**\r`;
+
+        if (lobbyInfo.mpLink == '') {
+            message += '\r';
+        } else {
+            message += `<${lobbyInfo.mpLink}>\r\r`;
+        }
+
         message += `:red_square: ${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} :blue_square:\r\r`;
         message += mapResults
             .filter(res => res.winner)
@@ -114,12 +125,16 @@ namespace LobbyStatusHelper {
         return message;
     }
 
-    export function isFinished(redScore: number, blueScore: number, bestOf: number) {
+    export function wonExpectedMatches(redScore: number, blueScore: number, bestOf: number) {
         const winningTarget = (bestOf + 1) / 2;
         return redScore === winningTarget || blueScore === winningTarget;
     }
 
     export function scoreMessage(redTeam: Team, blueTeam: Team) {
         return `${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name}`;
+    }
+
+    export function isDefaultWin(redScore: number, blueScore: number) {
+        return redScore === -1 || blueScore === -1;
     }
 }

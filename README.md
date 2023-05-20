@@ -14,8 +14,8 @@ These are scripts for the RNG Cup referee Google Sheet.
 Clone the repository and install dependencies.
 
 ```sh
-git clone https://github.com/minidomo/rng-cup-qualifier-sheet-gas.git
-cd rng-cup-qualifier-sheet-gas
+git clone https://github.com/minidomo/rng-cup-ref-sheet-gas.git
+cd rng-cup-ref-sheet-gas
 npm install
 ```
 

@@ -16,7 +16,7 @@ namespace MatchManager {
             return;
         }
 
-        updateSheet(sheet, input);
+        MatchManagerUtil.updateSheet(sheet, input);
     }
 
     function getInput(): InputResult | null {
@@ -55,13 +55,14 @@ namespace MatchManager {
         const SS = SpreadsheetApp.getActiveSpreadsheet();
 
         if (SS.getSheetByName(matchId)) {
-            UI.alert('Duplicate match id. Delete the existing one before creating another');
+            UI.alert(`Duplicate match id. Delete the existing one before creating another: ${matchId}`);
             return null;
         }
 
-        const template = SS.getSheetByName('Match - Template');
+        const templateName = 'Match - Template';
+        const template = SS.getSheetByName(templateName);
         if (!template) {
-            UI.alert('Could not find sheet with name "Match - Template"');
+            UI.alert(`Could not find sheet with name: ${templateName}`);
             return null;
         }
 
@@ -69,25 +70,5 @@ namespace MatchManager {
         sheet.setName(matchId);
 
         return sheet;
-    }
-
-    function updateSheet(sheet: GoogleAppsScript.Spreadsheet.Sheet, input: InputResult) {
-        sheet.getRange('C2').setValue(input.redTeamName);
-        sheet.getRange('E2').setValue(input.blueTeamName);
-        sheet.getRange('D7').setValue(input.matchId);
-
-        const teams = Teams.get();
-
-        const red = teams.find(e => e.name === input.redTeamName);
-        if (red) {
-            const playerRange = sheet.getRange('C22:E24');
-            playerRange.setValues(TableUtil.fillTable(playerRange.getValues(), red.players));
-        }
-
-        const blue = teams.find(e => e.name === input.blueTeamName);
-        if (blue) {
-            const playerRange = sheet.getRange('C25:E27');
-            playerRange.setValues(TableUtil.fillTable(playerRange.getValues(), blue.players));
-        }
     }
 }

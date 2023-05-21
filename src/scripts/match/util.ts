@@ -28,4 +28,15 @@ namespace MatchManagerUtil {
             range.setValues(TableUtil.fillTable(range.getValues(), team.players));
         }
     }
+
+    export function promptMatchId(): string | null {
+        const UI = SpreadsheetApp.getUi();
+
+        const response = UI.prompt('Enter the match id', UI.ButtonSet.OK_CANCEL);
+        if (response.getSelectedButton() === UI.Button.CANCEL) {
+            return null;
+        }
+
+        return response.getResponseText().trim();
+    }
 }

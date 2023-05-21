@@ -20,6 +20,11 @@ namespace Settings {
         percentage: number;
     }
 
+    interface WinConditionPercentageEntry {
+        winCondition: string;
+        percentage: number;
+    }
+
     export function getStageGeneralEntries(): StageGeneralEntry[] {
         const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
         if (!sheet) {
@@ -91,6 +96,26 @@ namespace Settings {
             .map(row => {
                 const ret: ModCombinationPercentageEntry = {
                     modCombination: StringUtil.convert(row[0]),
+                    percentage: parseFloat(row[1]),
+                };
+
+                return ret;
+            });
+    }
+
+    export function getWinConditionPercentageEntries(): WinConditionPercentageEntry[] {
+        const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
+        if (!sheet) {
+            return [];
+        }
+
+        return sheet
+            .getRange('U3:V6')
+            .getValues()
+            .filter(RowUtil.isFull)
+            .map(row => {
+                const ret: WinConditionPercentageEntry = {
+                    winCondition: StringUtil.convert(row[0]),
                     percentage: parseFloat(row[1]),
                 };
 

@@ -5,18 +5,18 @@ namespace Settings {
         bestOf: number;
     }
 
-    interface ModStarRating {
-        mod: string;
+    interface ModPickStarRating {
+        modPick: string;
         starRating: number;
     }
 
-    interface StageModStarRatingEntry {
+    interface StageModPickStarRatingEntry {
         stage: string;
-        modStarRatings: ModStarRating[];
+        modPickStarRatings: ModPickStarRating[];
     }
 
-    interface ModCombinationPercentageEntry {
-        modCombination: string;
+    interface ModPickPercentageEntry {
+        modPick: string;
         percentage: number;
     }
 
@@ -46,7 +46,7 @@ namespace Settings {
             });
     }
 
-    export function getStageModStarRatingEntries(): StageModStarRatingEntry[] {
+    export function getStageModPickStarRatingEntries(): StageModPickStarRatingEntry[] {
         const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
         if (!sheet) {
             return [];
@@ -65,25 +65,25 @@ namespace Settings {
             .filter(row => !RowUtil.isEmpty(row))
             .map(row => {
                 const offset = 1;
-                const modStarRatings = mods.map((mod, index) => {
-                    const msr: ModStarRating = {
-                        mod,
+                const modPickStarRatings = mods.map((mod, index) => {
+                    const msr: ModPickStarRating = {
+                        modPick: mod,
                         starRating: parseFloat(row[index + offset]),
                     };
 
                     return msr;
                 });
 
-                const ret: StageModStarRatingEntry = {
+                const ret: StageModPickStarRatingEntry = {
                     stage: StringUtil.convert(row[0]),
-                    modStarRatings,
+                    modPickStarRatings: modPickStarRatings,
                 };
 
                 return ret;
             });
     }
 
-    export function getModCombinationPercentageEntries(): ModCombinationPercentageEntry[] {
+    export function getModPickPercentageEntries(): ModPickPercentageEntry[] {
         const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Settings');
         if (!sheet) {
             return [];
@@ -94,8 +94,8 @@ namespace Settings {
             .getValues()
             .filter(RowUtil.isFull)
             .map(row => {
-                const ret: ModCombinationPercentageEntry = {
-                    modCombination: StringUtil.convert(row[0]),
+                const ret: ModPickPercentageEntry = {
+                    modPick: StringUtil.convert(row[0]),
                     percentage: parseFloat(row[1]),
                 };
 

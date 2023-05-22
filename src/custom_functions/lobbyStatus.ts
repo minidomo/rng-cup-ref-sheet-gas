@@ -50,7 +50,7 @@ namespace LobbyStatusHelper {
     }
 
     type TeamColor = 'red' | 'blue';
-    type WinCondition = 'score' | 'accuracy' | 'combo';
+    type WinCondition = 'scorev2' | 'accuracy' | 'combo' | 'score';
 
     interface MapResult {
         name: string;
@@ -111,12 +111,14 @@ namespace LobbyStatusHelper {
         const scoremode = match[1];
 
         switch (scoremode) {
+            case '0':
+                return 'score';
             case '1':
                 return 'accuracy';
             case '2':
                 return 'combo';
             default:
-                return 'score';
+                return 'scorev2';
         }
     }
 

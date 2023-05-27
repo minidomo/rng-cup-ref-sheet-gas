@@ -13,6 +13,11 @@ namespace MatchManager {
             return;
         }
 
+        const append = promptMapAppendage();
+        if (typeof append === 'undefined') {
+            return;
+        }
+
         const stageName = StringUtil.convert(sheet.getRange('D11').getValue());
         const stageGeneral = Settings.getStageGeneralEntries().find(e => e.stage === stageName);
 
@@ -32,21 +37,42 @@ namespace MatchManager {
             return;
         }
 
-        // clear current mappool area
-        const mappoolRange = sheet.getRange('H3:L27');
-        mappoolRange.clearContent();
-
-        // update mappool area
-        const scoreModes = Array(stageGeneral.maps)
+        // generate score modes for each map
+        const scoreModes = Array(mappoolMaps.length)
             .fill(null)
             .map(() => randomScoreMode());
 
-        for (let i = 0; i < mappoolMaps.length; i++) {
+        const mappoolRange = sheet.getRange('H3:L27');
+        if (!append) {
+            // clear current mappool area
+            mappoolRange.clearContent();
+        }
+
+        // get indices to put the maps in
+        const availableRowIndices = Array(mappoolRange.getNumRows())
+            .fill(null)
+            .map((_, index) => index)
+            .filter(offset => sheet.getRange(mappoolRange.getRow() + offset, mappoolRange.getColumn() + 1).isBlank());
+
+        // update mappool area
+        for (let i = 0; i < Math.min(mappoolMaps.length, availableRowIndices.length); i++) {
             const row = toMapRow(mappoolMaps[i], scoreModes[i]);
             sheet
-                .getRange(mappoolRange.getRow() + i, mappoolRange.getColumn() + 1, 1, row.length)
+                .getRange(mappoolRange.getRow() + availableRowIndices[i], mappoolRange.getColumn() + 1, 1, row.length)
                 .setValues([row])
                 .setFontLine('none');
+        }
+    }
+
+    function promptMapAppendage(): boolean | undefined {
+        const UI = SpreadsheetApp.getUi();
+        const response = UI.prompt(`Append maps with existing ones on the sheet?`, UI.ButtonSet.YES_NO_CANCEL);
+        if (response.getSelectedButton() === UI.Button.YES) {
+            return true;
+        } else if (response.getSelectedButton() === UI.Button.NO) {
+            return false;
+        } else {
+            return;
         }
     }
 

@@ -136,13 +136,35 @@ namespace LobbyStatusHelper {
             message += `<${lobbyInfo.mpLink}>\r\r`;
         }
 
-        message += `:red_square: ${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} :blue_square:\r\r`;
+        message += `:red_square: ${discordEscapeCharacters(redTeam.name)} | ${redTeam.score} : ${
+            blueTeam.score
+        } | ${discordEscapeCharacters(blueTeam.name)} :blue_square:\r\r`;
         message += mapResults
             .filter(res => res.winner)
             .map(res => `:${res.winner}_square: | ${res.name} \`[${StringUtil.capitalizeStart(res.winCondition)}]\``)
             .join('\r');
         message = message.trim();
         return message;
+    }
+
+    function discordEscapeCharacters(value: string) {
+        let ret = value;
+        const escapableCharacters = '\\`~!@#$%^&*()_+-=[]{}|;\':",./<>?'.split('');
+        escapableCharacters.forEach(e => {
+            const regex = createRegex(e);
+            ret = ret.replace(regex, `\\${e}`);
+        });
+        return ret;
+    }
+
+    function createRegex(character: string) {
+        const specialCharacters = '$^*()+[]\\.?|';
+
+        if (specialCharacters.includes(character)) {
+            return new RegExp(`\\${character}`, 'g');
+        }
+
+        return new RegExp(character, 'g');
     }
 
     export function wonExpectedMatches(redScore: number, blueScore: number, bestOf: number) {

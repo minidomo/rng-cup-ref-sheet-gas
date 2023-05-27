@@ -66,7 +66,10 @@ namespace MatchManager {
 
     function promptMapAppendage(): boolean | undefined {
         const UI = SpreadsheetApp.getUi();
-        const response = UI.prompt(`Append maps with existing ones on the sheet?`, UI.ButtonSet.YES_NO_CANCEL);
+        const response = UI.prompt(
+            `Append maps with existing ones on the sheet? Click a button.`,
+            UI.ButtonSet.YES_NO_CANCEL,
+        );
         if (response.getSelectedButton() === UI.Button.YES) {
             return true;
         } else if (response.getSelectedButton() === UI.Button.NO) {

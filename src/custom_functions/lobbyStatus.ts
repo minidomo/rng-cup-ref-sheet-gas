@@ -19,6 +19,10 @@ function lobbyStatus(redRange: string[][], blueRange: string[][], lobbyInfoRange
         return 'ERROR: Invalid best of number';
     }
 
+    if (!LobbyStatusHelper.isCorrectNumberOfMaps(lobbyInfo, mapResults)) {
+        return 'ERROR: Incorrect number of maps';
+    }
+
     if (LobbyStatusHelper.isDefaultWin(redTeam.score, blueTeam.score)) {
         return LobbyStatusHelper.summaryMessage(redTeam, blueTeam, lobbyInfo, mapResults);
     }
@@ -178,5 +182,15 @@ namespace LobbyStatusHelper {
 
     export function isDefaultWin(redScore: number, blueScore: number) {
         return redScore === -1 || blueScore === -1;
+    }
+
+    export function isCorrectNumberOfMaps(lobbyInfo: LobbyInformation, mapResults: MapResult[]): boolean {
+        const stageGeneral = Settings.getStageGeneralEntries().find(e => e.stage === lobbyInfo.stage);
+
+        if (!stageGeneral) {
+            return false;
+        }
+
+        return stageGeneral.maps === mapResults.length;
     }
 }

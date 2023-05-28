@@ -177,7 +177,12 @@ namespace LobbyStatusHelper {
     }
 
     export function scoreMessage(redTeam: Team, blueTeam: Team, lobbyInfo: LobbyInformation) {
-        return `${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} // Best of ${lobbyInfo.bestOf}`;
+        let ret = `${redTeam.name} | ${redTeam.score} : ${blueTeam.score} | ${blueTeam.name} // Best of ${lobbyInfo.bestOf}`;
+        if (ret.startsWith('!')) {
+            // prevent accidently using a command by prepending a period
+            ret = `.${ret}`;
+        }
+        return ret;
     }
 
     export function isDefaultWin(redScore: number, blueScore: number) {

@@ -10,7 +10,8 @@ namespace mdmappool {
                 beatmaps = beatmaps.filter(config.beatmapFilter);
             }
 
-            const beatmap = getClosestStarRatingBeatmap(beatmaps, config.starRating);
+            // const beatmap = getClosestStarRatingBeatmap(beatmaps, config.starRating);
+            const beatmap = randomBeatmap(beatmaps);
             if (beatmap) {
                 return {
                     beatmap,
@@ -36,7 +37,10 @@ namespace mdmappool {
         return ret;
     }
 
-    function getClosestStarRatingBeatmap(beatmaps: OsuApiTypes.BeatmapResponse[], starRating: number) {
+    function getClosestStarRatingBeatmap(
+        beatmaps: OsuApiTypes.BeatmapResponse[],
+        starRating: number,
+    ): OsuApiTypes.BeatmapResponse | null {
         if (beatmaps.length === 0) {
             return null;
         }
@@ -46,6 +50,15 @@ namespace mdmappool {
             const diff2 = Math.abs(parseFloat(cur.difficultyrating) - starRating);
             return diff1 < diff2 ? prev : cur;
         }, beatmaps[0]);
+    }
+
+    function randomBeatmap(beatmaps: OsuApiTypes.BeatmapResponse[]): OsuApiTypes.BeatmapResponse | null {
+        if (beatmaps.length === 0) {
+            return null;
+        }
+
+        const rIndex = Math.floor(Math.random() * beatmaps.length);
+        return beatmaps[rIndex];
     }
 
     function makeBeatmapParams(config: mdmappool.GenerationConfiguration): Partial<OsuApiTypes.BeatmapParams> {

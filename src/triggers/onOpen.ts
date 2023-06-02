@@ -11,7 +11,8 @@ function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen) {
             UI.createMenu('Match')
                 .addItem('Create', 'MatchManager.create')
                 .addItem('Refresh', 'MatchManager.refresh')
-                .addItem('Generate maps', 'MatchManager.generateMaps'),
+                .addItem('Generate maps', 'MatchManager.generateMaps')
+                .addItem('Update winners', 'MatchManager.updateWinners'),
         )
         .addItem('Set HTTP delay', 'HttpDelayManager.showPrompt')
         .addItem('Debug', 'Debug.test')

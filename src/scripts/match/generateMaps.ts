@@ -135,7 +135,7 @@ namespace MatchManager {
 
     function makeBeatmapFilter(starRating: number): mdmappool.BeatmapFilter {
         const f: mdmappool.BeatmapFilter = beatmap => {
-            const SR_ERROR = 0.2;
+            const SR_ERROR = 0.1;
             const MAX_LENGTH = 380;
             const MIN_LENGTH = 180;
 

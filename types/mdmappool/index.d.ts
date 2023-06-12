@@ -5,12 +5,12 @@ declare namespace mdmappool {
 
     interface GenerationConfiguration {
         modPick: string,
-        starRating: number,
+        starRating?: number,
         mode: 'osu' | 'taiko' | 'mania' | 'ctb',
         timestamp?: string,
         beatmapFilter?: BeatmapFilter,
-        returnAmount: 'single' | 'multiple',
-        selection: 'closest' | 'random',
+        amount: 'single' | 'multiple',
+        selection?: 'closest' | 'random',
     }
 
     interface MappoolMap {

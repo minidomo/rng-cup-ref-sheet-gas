@@ -101,7 +101,7 @@ namespace MatchManager {
             starRating: mpsrEntry.starRating,
             mode: 'osu',
             beatmapFilter: makeBeatmapFilter(mpsrEntry.starRating),
-            returnAmount: 'single',
+            amount: 'single',
             selection: 'random',
         });
 

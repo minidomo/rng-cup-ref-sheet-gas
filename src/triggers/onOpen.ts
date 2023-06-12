@@ -15,6 +15,8 @@ function onOpen(e: GoogleAppsScript.Events.SheetsOnOpen) {
                 .addItem('Update winners', 'MatchManager.updateWinners'),
         )
         .addItem('Set HTTP delay', 'HttpDelayManager.showPrompt')
-        .addItem('Debug', 'Debug.test')
+        .addSubMenu(
+            UI.createMenu('Developer').addItem('Gen maps', 'Developer.genMaps').addItem('Debug', 'Developer.debug'),
+        )
         .addToUi();
 }

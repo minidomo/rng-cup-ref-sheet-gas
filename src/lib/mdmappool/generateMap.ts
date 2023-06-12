@@ -10,11 +10,12 @@ namespace mdmappool {
                 beatmaps = beatmaps.filter(config.beatmapFilter);
             }
 
-            if (config.returnAmount === 'single') {
+            if (config.amount === 'single') {
                 let beatmap: OsuApiTypes.BeatmapResponse | null = null;
 
                 if (config.selection === 'closest') {
-                    beatmap = getClosestStarRatingBeatmap(beatmaps, config.starRating);
+                    const starRating = config.starRating ?? 4;
+                    beatmap = getClosestStarRatingBeatmap(beatmaps, starRating);
                 } else if (config.selection === 'random') {
                     beatmap = randomBeatmap(beatmaps);
                 }
@@ -27,7 +28,7 @@ namespace mdmappool {
                         },
                     ];
                 }
-            } else if (config.returnAmount === 'multiple') {
+            } else if (config.amount === 'multiple') {
                 return beatmaps.map(e => ({
                     beatmap: e,
                     modPick: config.modPick,
@@ -43,7 +44,13 @@ namespace mdmappool {
         const ret: OsuApiTypes.BeatmapResponse[] = [];
 
         for (let i = 0; i < attempts; i++) {
-            const beatmaps = OsuApi.getBeatmaps(params);
+            const apiParams = Object.assign({}, params);
+
+            if (!apiParams.since) {
+                apiParams.since = randomTimestamp();
+            }
+
+            const beatmaps = OsuApi.getBeatmaps(apiParams);
             if (beatmaps) {
                 ret.push(...beatmaps);
             }
@@ -93,8 +100,6 @@ namespace mdmappool {
 
         if (config.timestamp) {
             ret['since'] = config.timestamp;
-        } else {
-            ret['since'] = randomTimestamp();
         }
 
         return ret;

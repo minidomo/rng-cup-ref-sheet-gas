@@ -96,12 +96,16 @@ namespace MatchManager {
             return null;
         }
 
-        return mdmappool.generateMap({
+        const ret = mdmappool.generateMaps({
             modPick,
             starRating: mpsrEntry.starRating,
             mode: 'osu',
             beatmapFilter: makeBeatmapFilter(mpsrEntry.starRating),
+            returnAmount: 'single',
+            selection: 'random',
         });
+
+        return ret ? ret[0] : null;
     }
 
     function randomModPick(): string {
@@ -135,8 +139,8 @@ namespace MatchManager {
 
     function makeBeatmapFilter(starRating: number): mdmappool.BeatmapFilter {
         const f: mdmappool.BeatmapFilter = beatmap => {
-            const SR_ERROR = 0.1;
-            const MAX_LENGTH = 380;
+            // const SR_ERROR = 0.1;
+            const MAX_LENGTH = 300;
             const MIN_LENGTH = 180;
 
             if (beatmap.audio_unavailable !== '0') {
@@ -152,7 +156,7 @@ namespace MatchManager {
             }
 
             const diffRating = parseFloat(beatmap.difficultyrating);
-            if (Math.abs(diffRating - starRating) > SR_ERROR) {
+            if (starRating - 0.1 > diffRating || diffRating > starRating + 0.2) {
                 return false;
             }
 

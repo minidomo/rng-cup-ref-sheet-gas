@@ -1,8 +1,7 @@
 namespace Debug {
     export function test() {
         const UI = SpreadsheetApp.getUi();
-        UI.alert(JSON.stringify(Settings.getStageGeneralEntries(), null, 4));
-        UI.alert(JSON.stringify(Settings.getStageModPickStarRatingEntries(), null, 4));
-        UI.alert(JSON.stringify(Settings.getModPickPercentageEntries(), null, 4));
+        const gf = Settings.getStageModPickStarRatingEntries().find(e => e.stage === 'Grand Finals');
+        UI.alert(JSON.stringify(gf, null, 4));
     }
 }

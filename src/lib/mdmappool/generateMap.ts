@@ -1,5 +1,5 @@
 namespace mdmappool {
-    export function generateMap(config: mdmappool.GenerationConfiguration): mdmappool.MappoolMap | null {
+    export function generateMaps(config: mdmappool.GenerationConfiguration): mdmappool.MappoolMap[] | null {
         const attempts = 5;
         const beatmapParams = makeBeatmapParams(config);
 
@@ -10,13 +10,28 @@ namespace mdmappool {
                 beatmaps = beatmaps.filter(config.beatmapFilter);
             }
 
-            // const beatmap = getClosestStarRatingBeatmap(beatmaps, config.starRating);
-            const beatmap = randomBeatmap(beatmaps);
-            if (beatmap) {
-                return {
-                    beatmap,
+            if (config.returnAmount === 'single') {
+                let beatmap: OsuApiTypes.BeatmapResponse | null = null;
+
+                if (config.selection === 'closest') {
+                    beatmap = getClosestStarRatingBeatmap(beatmaps, config.starRating);
+                } else if (config.selection === 'random') {
+                    beatmap = randomBeatmap(beatmaps);
+                }
+
+                if (beatmap) {
+                    return [
+                        {
+                            beatmap,
+                            modPick: config.modPick,
+                        },
+                    ];
+                }
+            } else if (config.returnAmount === 'multiple') {
+                return beatmaps.map(e => ({
+                    beatmap: e,
                     modPick: config.modPick,
-                };
+                }));
             }
         }
 

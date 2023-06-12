@@ -9,6 +9,8 @@ declare namespace mdmappool {
         mode: 'osu' | 'taiko' | 'mania' | 'ctb',
         timestamp?: string,
         beatmapFilter?: BeatmapFilter,
+        returnAmount: 'single' | 'multiple',
+        selection: 'closest' | 'random',
     }
 
     interface MappoolMap {
